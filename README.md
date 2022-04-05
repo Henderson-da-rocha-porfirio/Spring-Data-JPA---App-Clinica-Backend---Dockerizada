@@ -1,7 +1,7 @@
 # Clínica App API - Dockerizada
-## US = User Stories
+## 1. Sobre as US = User Stories:
 ### Caso queira ver as US, procure no README.md do repositório do mesmo nome, mas sem o "dockerizada" no final do nome.
-## IMAGES
+## 2. IMAGES
 #### - Uma imagem é uma combinação de nossa aplicação e a infraestrutura que é requirida.
 #### - Exemplo: Uma aplicação Java, nós precisamos do Java ligado num Tomcat num sistema operacional Linux e com Mysql ou Sql Databases.
 #### - Toda esta informação irá dentro de um arquivo de imagem.
