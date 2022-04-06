@@ -100,9 +100,9 @@ docker run --name dbpostgresql -p 5432:5432 -e POSTGRES_PASSWORD=password -d pos
 ````
  docker ps
  ````
-#### 3. Entrando no Docker Container:
+#### 3. Entrando no Docker Container ( root ):
 ````
-docker exec -it some-postgres bash
+docker exec -it dbpostgresql bash
 ````
 #### 4. Acessando ao Database:
 ````
@@ -120,7 +120,7 @@ CREATE DATABASE clinica;
 ````
  \c clinica
  ````
-#### 8. Colar tabela: Só jogar ou criar a tabela lá
+#### 8. Colar tabela: Só jogar ou criar a tabela lá clinica=#
 #### 9. Verificar tabelas existentes:
 ````
 \dt
@@ -141,7 +141,7 @@ server.servlet.context-path=/clinicaservices
 #### - Então, " dbpostgresql " (não tem um padrão de nome. Mas assim é bom para diferenciarmos).
 ````
 // postgresql
-spring.datasource.url=jdbc:postgresql://some-postgres:5432/mydb
+spring.datasource.url=jdbc:postgresql://dbpostgresql:5432/clinica
 spring.datasource.username=postgres
 spring.datasource.password=password
 server.servlet.context-path=/clinicaservices
@@ -161,10 +161,10 @@ clinicaapi-0.0.1-SNAPSHOT.jar
 ### 3 - Criando o Dockerfile 
 #### Crie na Raiz do projeto um arquivo chamado Dockerfile (com 'D' maiúsculo mesmo)
 ````
-FROM java:8
+FROM openjdk:8-jdk-alpine
 VOLUME /tmp
-ADD target/clinicaapi-0.0.1-SNAPSHOT.jar clinicaapi-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar","clinicaapi-0.0.1-SNAPSHOT.jar"]
+ADD target/clinicaapi-0.0.1-SNAPSHOT.jar clinicaapi.jar
+ENTRYPOINT ["java", "-jar","/clinicaapi.jar"]
 ````
 #### a. "FROM java:8" = Criado o Dockerfile que é o responsável em acionar ou criar a imagem baseada, no nosso caso, numa imagem java 8.
 #### b. "VOLUME" = É opcional.
@@ -174,14 +174,20 @@ clinicaapi-0.0.1-SNAPSHOT.jar
 ````
 #### d. "ENTRYPOINT" = é o Comando Docker ou Comando Docker File que informa ao Docker que os comandos devem correr dentro do Container assim que estiver no ponto de entrada assim que o Container subir e correr.
 
-### 4 - Fazendo o Build da imagem criada e dê um nome: " clinica_app ":
+### 4 — Fazendo o Build da imagem criada e dê um nome: " clinica_app ":
 ````
 docker build -f Dockerfile -t clinica_app .
 ````
 #### - Ele fará o pull do Dockerfile.
-### 5 - Verifica se a imagem está criada:
+### 5 — Verifica se a imagem está criada:
 ````
 docker images
 ````
-
-$ docker run -t --link dbpostgresql:postgresql -p 8080/8080 clinica_app
+### 6 - Correndo o Link:
+````
+docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
+````
+### 7 — Fazendo o Teste:
+````
+localhost:8080/clinicaservices/api/pacientes
+````
