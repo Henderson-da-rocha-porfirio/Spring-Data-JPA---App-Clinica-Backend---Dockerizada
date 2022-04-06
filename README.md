@@ -211,5 +211,5 @@ psql -h localhost -p 5432 -U postgres
 docker start clinica_app
 ````
 ````
-docker start clinica_app
+docker stop clinica_app
 ````
