@@ -192,3 +192,15 @@ docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 ````
 localhost:8080/clinicaservices/api/pacientes
 ````
+## Passos para Dockerizar o APP incluindo o docker-compose.yml
+
+### Construir os containers e imagens:
+````
+docker-compose up --build
+````
+````
+docker exec -it clinica-dbpostgresql-1 bash
+````
+````
+psql -h localhost -p 5432 -U postgres
+````
