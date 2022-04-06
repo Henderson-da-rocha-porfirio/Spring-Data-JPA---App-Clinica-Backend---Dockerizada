@@ -48,7 +48,7 @@ docker pull <imagem>
 ````
 docker run <imagem>
 ````
-## Configurando Docker
+## Passos para Dockerizar o Database:
 
 ### Setup - mysql container:
 ````
