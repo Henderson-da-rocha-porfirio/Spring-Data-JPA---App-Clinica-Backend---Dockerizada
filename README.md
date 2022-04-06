@@ -125,4 +125,6 @@ CREATE DATABASE clinica;
 ````
 \dt
 ````
-#### 10. 
+## Dockerizando o APP:
+### 1 - Configurando o application.properties:
+#### i. MYSQL: 
