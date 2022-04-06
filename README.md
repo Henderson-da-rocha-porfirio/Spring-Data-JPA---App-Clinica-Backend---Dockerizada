@@ -50,10 +50,10 @@ docker run <imagem>
 ````
 ## Configurando Docker
 
-### Setup the mysql container:
+### Setup - mysql container:
 ````
 
-docker run -d -p 6666:3306 --name=docker-mysql --env="MYSQL_ROOT_PASSWORD=test1234" --env="MYSQL_DATABASE=clinicals" mysql
+docker run -d -p 6666:3306 --name=docker-mysql --env="MYSQL_ROOT_PASSWORD=test1234" --env="MYSQL_DATABASE=clinica" mysql
 ````
 ````
 docker exec -it docker-mysql bash
@@ -65,29 +65,29 @@ mysql -u root -p test1234
 mysql> show databases;
 ````
 ````
-mysql> use clinicals;
+mysql> use clinica;
 ````
 ````
 mysql> show tables; 
 ````
 Outro Terminal:
 ````
-docker exec -i docker-mysql mysql -uroot -ptest1234 clinicals <clinicals.sql
+docker exec -i docker-mysql mysql -uroot -ptest1234 clinica <clinica.sql
 ````
 
-Container and testing:
+Container e testing:
 ````
-docker build -f Dockerfile -t clinicals_app .
-````
-````
-docker run -t --link docker-mysql:mysql -p 10555:8080 clinicals_app
+docker build -f Dockerfile -t clinica_app .
 ````
 ````
-http://localhost:10555/clinicalservices/api/pacientes
+docker run -t --link docker-mysql:mysql -p 10555:8080 clinica_app
+````
+````
+http://localhost:10555/clinicaservices/api/pacientes
 ````
 #### The --link command will allow the reservation_app container to use the port of MySQL
 
-### Setup the sql ( postgresql ) container:
+### Setup - sql ( postgresql ) container:
 #### - Instalando uma Imagem postgresql:
 ````
 docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
@@ -129,7 +129,7 @@ CREATE DATABASE clinica;
 ### 1 - Configurando o application.properties
 #### A. MYSQL:
 ##### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
-##### - Então, " docker-mysql " é o nome que é dado ao mySQL Container:
+##### - Então, " docker-mysql " (não tem um padrão de nome. Mas assim é bom para diferenciarmos) é o nome que é dado ao mySQL Container:
 ````
 spring.datasource.url=jdbc:mysql://docker-mysql:3306/clinica
 spring.datasource.username=root
@@ -137,13 +137,39 @@ spring.datasource.password=test
 server.servlet.context-path=/clinicaservices
 ````
 #### B. POSTGRESQL:
-#### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
-#### - Então, " docker-mysql " é o nome que é dado ao mySQL Container:
-##### i. MYSQL:
+##### - Fazemos o mesmo com o postgresql.
+#### - Então, " dbpostgresql " (não tem um padrão de nome. Mas assim é bom para diferenciarmos).
 ````
-spring.datasource.url=jdbc:mysql://docker-mysql:3306/clinica
-spring.datasource.username=root
-spring.datasource.password=test
+// postgresql
+spring.datasource.url=jdbc:postgresql://dbpostgresql:5432/mydb
+spring.datasource.username=postgres
+spring.datasource.password=password
 server.servlet.context-path=/clinicaservices
 ````
+### 2 - Target
+#### i. Apaga a pasta Target
+#### ii. Roda o Maven sem os testes:
+````
+mvn clean install -Dmaven.test.skip=true -Dpmd.skip=true
+````
+#### iii. Daí aparecerá uma nova pasta Target. Verifique se está lá o app:
+````
+clinicaapi-0.0.1-SNAPSHOT.jar
+````
+#### iv. O copie e cole através do refatore. Mas não o refatore. Só copie e o cole no Dockerfile.
+### 3 - Dockerfile 
+#### Crie na Raiz do projeto um arquivo chamado Dockerfile (com 'D' maiúsculo mesmo)
+````
+FROM java:8
+VOLUME /tmp
+ADD target/clinicaapi-0.0.1-SNAPSHOT.jar clinicaapi-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar","clinicaapi-0.0.1-SNAPSHOT.jar"]
+````
+#### a. "FROM java:8" = Criado o Dockerfile que é o responsável em acionar ou criar a imagem baseada, no nosso caso, numa imagem java 8.
+#### b. "VOLUME" = É opcional.
+#### c. "ADD target" = Crie o Docker Container com o mesmo nome:
+````
+clinicaapi-0.0.1-SNAPSHOT.jar
+````
+#### d. "ENTRYPOINT" = é o Comando Docker ou Comando Docker File que informa ao Docker que os comandos devem correr dentro do Container assim que estiver no ponto de entrada assim que o Container subir e correr.
 
