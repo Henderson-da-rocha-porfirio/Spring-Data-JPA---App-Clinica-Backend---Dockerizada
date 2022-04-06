@@ -1,7 +1,8 @@
-# Clínica App Backend Api Restful Dockerizada
-### US = User Stories = Se quiser, der uma olhada no repositório de mesmo nome mas sem o " Dockerizada " no final.
+# Clínica App API - Dockerizada
+## Sobre as US = User Stories:
+### Caso queira ver as US, procure no README.md do repositório do mesmo nome, mas sem o "dockerizada" no final do nome.
 # DOCKER
-## IMAGES
+## DOCKER IMAGES
 #### - Uma imagem é uma combinação de nossa aplicação e a infraestrutura que é requirida.
 #### - Exemplo: Uma aplicação Java, nós precisamos do Java ligado num Tomcat num sistema operacional Linux e com Mysql ou Sql Databases.
 #### - Toda esta informação irá dentro de um arquivo de imagem.
@@ -50,39 +51,43 @@ docker run <imagem>
 ## Configurando Docker
 
 ### Setup the mysql container:
+````
 
 docker run -d -p 6666:3306 --name=docker-mysql --env="MYSQL_ROOT_PASSWORD=test1234" --env="MYSQL_DATABASE=clinicals" mysql
-
+````
+````
 docker exec -it docker-mysql bash
-
-# mysql -uroot -p 
-test1234
-
+````
+````
+mysql -u root -p test1234
+````
+````
 mysql> show databases;
-
+````
+````
 mysql> use clinicals;
-
+````
+````
 mysql> show tables; 
-
-
-Another Terminal:
-
+````
+Outro Terminal:
+````
 docker exec -i docker-mysql mysql -uroot -ptest1234 clinicals <clinicals.sql
+````
 
-
-Application Container and testing:
-
+Container and testing:
+````
 docker build -f Dockerfile -t clinicals_app .
-
+````
+````
 docker run -t --link docker-mysql:mysql -p 10555:8080 clinicals_app
+````
+````
+http://localhost:10555/clinicalservices/api/pacientes
+````
+#### The --link command will allow the reservation_app container to use the port of MySQL
 
-http://localhost:10555/clinicalservices/api/patients
-
-The --link command will allow the reservation_app container to use the port of MySQL
-
-
-
-### Setup the sql container:
+### Setup the sql ( postgresql ) container:
 #### - Instalando uma Imagem postgresql:
 ````
 docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
@@ -120,3 +125,4 @@ CREATE DATABASE clinica;
 ````
 \dt
 ````
+#### 10. 
