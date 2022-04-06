@@ -1,24 +1,40 @@
+-- Database
+
 create database clinica
+
+
+-- Table paciente
 
 CREATE TABLE paciente (
     id Serial NOT NULL,
-    last_name varchar(255) NOT NULL,
-    first_name varchar(255) NOT NULL,
-    age int,
+    ultimo_nome varchar(255) NOT NULL,
+    primeiro_nome varchar(255) NOT NULL,
+    idade int,
     PRIMARY KEY (id)
 );
+
+
+-- Table clinicadata
 
 CREATE TABLE clinicadata (
     id serial NOT NULL,
     paciente_id int,
-    component_name varchar(255) NOT NULL,
-    component_value varchar(255) NOT NULL,
+    componente_nome varchar(255) NOT NULL,
+    componente_value varchar(255) NOT NULL,
     measured_date_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
      CONSTRAINT fk_paciente FOREIGN KEY (paciente_id)
   REFERENCES paciente(id)
 );
 
+-- Selects
+
+SELECT * FROM paciente
+SELECT * FROM clinicadata
+
+
+
+-- insert paciente
 
 insert into paciente values(1,'John','Mccain',52);
 insert into paciente values(2,'Siva','Shankar',32);
@@ -33,9 +49,11 @@ insert into paciente values(10,'Rowling','Lte',49);
 
 
 
-insert into clinicadata  values('1', '1', 'bp', '67/119', '2018-07-09 19:34:24')
-insert into clinicadata  values('2', '2', 'bp', '63/115', '2018-06-19 19:34:24')	
-insert into clinicadata  values('3', '3', 'bp', '72/129', '2018-07-26 19:34:24')
+-- insert clinicadata bp
+
+insert into clinicadata  values('1', '1', 'bp', '67/119', '2018-07-09 19:34:24');
+insert into clinicadata  values('2', '2', 'bp', '63/115', '2018-06-19 19:34:24');	
+insert into clinicadata  values('3', '3', 'bp', '72/129', '2018-07-26 19:34:24');
 insert into clinicadata  values('4', '4', 'bp', '74/139', '2018-08-03 19:34:24');
 insert into clinicadata  values('5', '5', 'bp', '67/119', '2018-08-29 19:34:24');
 insert into clinicadata  values('6', '6', 'bp', '62/109', '2018-07-12 19:34:24');
@@ -82,6 +100,9 @@ insert into clinicadata  values('46', '7', 'bp', '55/102', '2019-02-21 19:34:24'
 insert into clinicadata  values('47', '8', 'bp', '50/109', '2019-02-15 19:34:24');
 insert into clinicadata  values('48', '9', 'bp', '67/119', '2019-04-19 19:34:24');
 insert into clinicadata  values('49', '10', 'bp', '37/89', '2019-05-29 19:34:24');
+
+
+-- insert clinicadata heartrate
 
 insert into clinicadata  values('51', '1', 'heartrate', '67', '2018-07-09 19:34:24');
 insert into clinicadata  values('52', '2', 'heartrate', '115', '2018-06-19 19:34:24');	
@@ -133,6 +154,29 @@ insert into clinicadata  values('97', '8', 'heartrate', '50', '2019-02-15 19:34:
 insert into clinicadata  values('98', '9', 'heartrate', '67', '2019-04-19 19:34:24');
 insert into clinicadata  values('99', '10', 'heartrate', '89', '2019-05-29 19:34:24');
 
+
+
+-- Depois dos Inserts, realizar seval para permitir inserção de novos ID's:
+
+select setval('paciente_id_seq', (select max(id) from paciente))
+
+select setval('clinicadata_id_seq', (select max(id) from clinicadata))
+
+
+
+-- Exemplo de Correcao de erro em postgresql onde não se consegue salvar novos ID's: Erro: duplicate key value violates unique constraint
+
+SELECT * FROM paciente
+
+select setval('paciente_id_seq', (select max(id) from paciente))
+
+SELECT * FROM paciente_id_seq
+
+
+
+-- drop se precisar
+
 drop table clinicadata
 
 drop table paciente
+
