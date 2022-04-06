@@ -48,7 +48,7 @@ docker pull <imagem>
 ````
 docker run <imagem>
 ````
-## Passos para Dockerizar o Database:
+## Passos para Dockerizar o Database Sem o docker-compose.yml:
 
 ### Setup - mysql container:
 ````
@@ -125,7 +125,7 @@ CREATE DATABASE clinica;
 ````
 \dt
 ````
-## Passos para Dockerizar o APP:
+## Passos para Dockerizar o APP sem o docker-compose.yml:
 ### 1 - Configurando o application.properties
 #### A. MYSQL:
 ##### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
@@ -193,6 +193,8 @@ docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 localhost:8080/clinicaservices/api/pacientes
 ````
 ## Passos para Dockerizar o APP incluindo o docker-compose.yml
+### Lembrando que é preciso seguir alguns passos acima sobre banco, tabelas e etc.
+### Se possível, utilizar o Docker Desktop para rodar os containers.
 
 ### Construir os containers e imagens:
 ````
