@@ -90,7 +90,7 @@ http://localhost:10555/clinicaservices/api/pacientes
 ### Setup - sql ( postgresql ) container:
 #### - Instalando uma Imagem postgresql:
 ````
-docker run --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
+docker run --name dbpostgresql -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
 ````
 #### 1. Ver imagem:
 ````
@@ -125,7 +125,7 @@ CREATE DATABASE clinica;
 ````
 \dt
 ````
-## Dockerizando o APP:
+## Passos para Dockerizar o APP:
 ### 1 - Configurando o application.properties
 #### A. MYSQL:
 ##### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
@@ -141,7 +141,7 @@ server.servlet.context-path=/clinicaservices
 #### - Então, " dbpostgresql " (não tem um padrão de nome. Mas assim é bom para diferenciarmos).
 ````
 // postgresql
-spring.datasource.url=jdbc:postgresql://dbpostgresql:5432/mydb
+spring.datasource.url=jdbc:postgresql://some-postgres:5432/mydb
 spring.datasource.username=postgres
 spring.datasource.password=password
 server.servlet.context-path=/clinicaservices
@@ -157,7 +157,8 @@ mvn clean install -Dmaven.test.skip=true -Dpmd.skip=true
 clinicaapi-0.0.1-SNAPSHOT.jar
 ````
 #### iv. O copie e cole através do refatore. Mas não o refatore. Só copie e o cole no Dockerfile.
-### 3 - Dockerfile 
+
+### 3 - Criando o Dockerfile 
 #### Crie na Raiz do projeto um arquivo chamado Dockerfile (com 'D' maiúsculo mesmo)
 ````
 FROM java:8
@@ -173,3 +174,14 @@ clinicaapi-0.0.1-SNAPSHOT.jar
 ````
 #### d. "ENTRYPOINT" = é o Comando Docker ou Comando Docker File que informa ao Docker que os comandos devem correr dentro do Container assim que estiver no ponto de entrada assim que o Container subir e correr.
 
+### 4 - Fazendo o Build da imagem criada e dê um nome: " clinica_app ":
+````
+docker build -f Dockerfile -t clinica_app .
+````
+#### - Ele fará o pull do Dockerfile.
+### 5 - Verifica se a imagem está criada:
+````
+docker images
+````
+
+$ docker run -t --link dbpostgresql:postgresql -p 8080/8080 clinica_app
