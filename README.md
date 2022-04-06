@@ -75,7 +75,7 @@ Outro Terminal:
 docker exec -i docker-mysql mysql -uroot -ptest1234 clinica <clinica.sql
 ````
 
-Container e testing:
+Criando o Container e fazendo o testing:
 ````
 docker build -f Dockerfile -t clinica_app .
 ````
@@ -85,7 +85,7 @@ docker run -t --link docker-mysql:mysql -p 10555:8080 clinica_app
 ````
 http://localhost:10555/clinicaservices/api/pacientes
 ````
-#### The --link command will allow the reservation_app container to use the port of MySQL
+#### O --link command permitirá que um reservation_app container possa utilizar a porta do MySQL
 
 ### Setup - sql ( postgresql ) container:
 #### - Instalando uma Imagem postgresql:
@@ -138,7 +138,7 @@ server.servlet.context-path=/clinicaservices
 ````
 #### B. POSTGRESQL:
 ##### - Fazemos o mesmo com o postgresql.
-#### - Então, " dbpostgresql " (não tem um padrão de nome. Mas assim é bom para diferenciarmos).
+#### - Então, " dbpostgresql " foi o nome passado na criação da imagem do Database. Se esquecer isso daí , e colocar outro nome. Os containers não se encontrarão mesmo com esta configuração.
 ````
 // postgresql
 spring.datasource.url=jdbc:postgresql://dbpostgresql:5432/clinica
@@ -184,6 +184,7 @@ docker build -f Dockerfile -t clinica_app .
 docker images
 ````
 ### 6 - Correndo o Link:
+##### O " --link " permitirá que um reservation_app container possa utilizar a porta do POSTGRESQL
 ````
 docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 ````
