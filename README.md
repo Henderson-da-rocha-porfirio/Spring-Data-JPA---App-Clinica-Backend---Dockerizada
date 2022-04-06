@@ -126,5 +126,24 @@ CREATE DATABASE clinica;
 \dt
 ````
 ## Dockerizando o APP:
-### 1 - Configurando o application.properties:
-#### i. MYSQL: 
+### 1 - Configurando o application.properties
+#### A. MYSQL:
+##### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
+##### - Então, " docker-mysql " é o nome que é dado ao mySQL Container:
+````
+spring.datasource.url=jdbc:mysql://docker-mysql:3306/clinica
+spring.datasource.username=root
+spring.datasource.password=test
+server.servlet.context-path=/clinicaservices
+````
+#### B. POSTGRESQL:
+#### - Uma vez que "containerizarmos" a aplicação e a acionarmos como um Container Docker, para que ela, como um Docker Container se comunique com outro Docker Container, ela deveria ter um nome de Container.
+#### - Então, " docker-mysql " é o nome que é dado ao mySQL Container:
+##### i. MYSQL:
+````
+spring.datasource.url=jdbc:mysql://docker-mysql:3306/clinica
+spring.datasource.username=root
+spring.datasource.password=test
+server.servlet.context-path=/clinicaservices
+````
+
