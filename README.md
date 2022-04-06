@@ -206,3 +206,10 @@ docker exec -it clinica-dbpostgresql-1 bash
 ````
 psql -h localhost -p 5432 -U postgres
 ````
+### Stop e Start
+````
+docker start clinica_app
+````
+````
+docker start clinica_app
+````
