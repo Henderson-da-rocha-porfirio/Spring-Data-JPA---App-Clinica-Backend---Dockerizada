@@ -184,7 +184,7 @@ docker build -f Dockerfile -t clinica_app .
 docker images
 ````
 ### 6 - Correndo o Link:
-##### O " --link " permitirá que um reservation_app container possa utilizar a porta do POSTGRESQL
+##### O " --link ", ligará e permitirá que um reservation_app container possa utilizar a porta do POSTGRESQL
 ````
 docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 ````
