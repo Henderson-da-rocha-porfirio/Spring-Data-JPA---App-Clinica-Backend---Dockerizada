@@ -48,6 +48,13 @@ docker pull <imagem>
 ````
 docker run <imagem>
 ````
+## "Dockerizando" - com docker-compose.yml
+### É Possível criar os containers de duas formas:
+#### 1. Sem o arquivo docker-compose.yml. Contudo, os projetos Spring em sua grande maioria, utilizam este arquivo.
+#### 2. E sem o arquivo acima citado. Abaixo, aparecem as duas formas. Então, antes de sair replicando, leia e veja o que será mais útil.
+#### 3. Outro detalhe interessante, é perceber que os comandos docker ou comandos relacionados a containers já rodando o docker, servem para ambos modos. Por isso não perdi tempo recopiando. Só leia e veja o que será mais útil.
+#### 4. A vantagem do docker-compose.yml, a meu ver, é que os containers já ficam unidos alí quando você observa no Docker Desktop. Ou seja, você já sabe quais os containers que estão rodando juntos e para que projeto.
+#### 5. Já sem o arquivo em questão, eles ficam "soltos" na estrutura dos containers e para visualizar pode ser um pouco mais chato para entender a qual imagem se referem e etc. Mas use conforme necessidade.
 ## Passos para Dockerizar o Database Sem o docker-compose.yml:
 
 ### Setup - mysql container:
@@ -75,7 +82,7 @@ Outro Terminal:
 docker exec -i docker-mysql mysql -uroot -ptest1234 clinica <clinica.sql
 ````
 
-Criando o Container e fazendo o testing:
+Criando o Container e fazendo o teste:
 ````
 docker build -f Dockerfile -t clinica_app .
 ````
@@ -85,7 +92,7 @@ docker run -t --link docker-mysql:mysql -p 10555:8080 clinica_app
 ````
 http://localhost:10555/clinicaservices/api/pacientes
 ````
-#### O --link command permitirá que um reservation_app container possa utilizar a porta do MySQL
+## O --link command permitirá que um reservation_app container possa utilizar a porta do MySQL
 
 ### Setup - sql ( postgresql ) container:
 #### - Instalando uma Imagem postgresql:
@@ -138,7 +145,8 @@ server.servlet.context-path=/clinicaservices
 ````
 #### B. POSTGRESQL:
 ##### - Fazemos o mesmo com o postgresql.
-#### - Então, " dbpostgresql " foi o nome passado na criação da imagem do Database. Se esquecer isso daí , e colocar outro nome. Os containers não se encontrarão mesmo com esta configuração.
+#### - Então, " dbpostgresql " foi o nome passado na criação da imagem do Database. Se esquecer isso daí , e colocar outro nome, os containers não se encontrarão mesmo com esta configuração.
+#### application.properties:
 ````
 // postgresql
 spring.datasource.url=jdbc:postgresql://dbpostgresql:5432/clinica
@@ -146,7 +154,7 @@ spring.datasource.username=postgres
 spring.datasource.password=password
 server.servlet.context-path=/clinicaservices
 ````
-### 2 - Target
+### 2 - Pasta Target
 #### i. Apaga a pasta Target
 #### ii. Roda o Maven sem os testes:
 ````
@@ -159,7 +167,8 @@ clinicaapi-0.0.1-SNAPSHOT.jar
 #### iv. O copie e cole através do refatore. Mas não o refatore. Só copie e o cole no Dockerfile.
 
 ### 3 - Criando o Dockerfile 
-#### Crie na Raiz do projeto um arquivo chamado Dockerfile (com 'D' maiúsculo mesmo)
+#### Crie na Raiz do projeto um arquivo chamado Dockerfile (com 'D' maiúsculo mesmo).
+#### O crie, conforme a necessidade da empresa ou sua no momento. Existem várias imagens também para "pull".
 ````
 FROM openjdk:8-jdk-alpine
 VOLUME /tmp
@@ -172,7 +181,7 @@ ENTRYPOINT ["java", "-jar","/clinicaapi.jar"]
 ````
 clinicaapi-0.0.1-SNAPSHOT.jar
 ````
-#### d. "ENTRYPOINT" = é o Comando Docker ou Comando Docker File que informa ao Docker que os comandos devem correr dentro do Container assim que estiver no ponto de entrada assim que o Container subir e correr.
+#### d. "ENTRYPOINT" = é o Comando Docker ou Comando Docker File que informa ao Docker que os comandos devem correr dentro do Container assim que estiver no ponto de entrada, e que o Container subir e correr.
 
 ### 4 — Fazendo o Build da imagem criada e dê um nome: " clinica_app ":
 ````
@@ -184,7 +193,7 @@ docker build -f Dockerfile -t clinica_app .
 docker images
 ````
 ### 6 - Correndo o Link:
-##### O " --link ", ligará e permitirá que um reservation_app container possa utilizar a porta do POSTGRESQL
+##### **** O " --link ", ligará e permitirá que um reservation_app container possa utilizar a porta do POSTGRESQL
 ````
 docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 ````
@@ -192,20 +201,28 @@ docker run -t --link dbpostgresql:postgres -p 8080:8080 clinica_app
 ````
 localhost:8080/clinicaservices/api/pacientes
 ````
-## Passos para Dockerizar o APP incluindo o docker-compose.yml
+## C. Passos para Dockerizar o APP incluindo o docker-compose.yml no POSTGRESQL
 ### Lembrando que é preciso seguir alguns passos acima sobre banco, tabelas e etc.
-### Se possível, utilizar o Docker Desktop para rodar os containers.
-
-### Construir os containers e imagens:
+### Se possível, utilizar o Docker Desktop para rodar e/ou verificar os containers.
+### Depois de criar o arquivo docker-compose.yml. Dúvidas, olhe o repositório como criá-lo ou crie um diferente conforme a necessidade, siga estes passos:
+### 1. Construir os containers e imagens:
 ````
 docker-compose up --build
 ````
+ou
+````
+docker-compose up
+````
+### Sobre o Container relacionado ao banco de dados que se comunicará com a API, também já dockerizada, a execute dessa forma:
+#### 1.
 ````
 docker exec -it clinica-dbpostgresql-1 bash
 ````
+#### 2.
 ````
 psql -h localhost -p 5432 -U postgres
 ````
+#### Caso tenha dúvidas, olhar os outros comandos acima relacionado ao Docker ou ao próprio Database.
 ### Stop e Start (abrir outro terminal e executar os comandos)
 ````
 docker start clinica_app
