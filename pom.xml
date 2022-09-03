@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tuyo</groupId>
-	<artifactId>clinicaapi</artifactId>
+	<artifactId>clinicaapi-docker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>clinicaapi</name>
+	<name>clinicaapi-docker</name>
 	<description>Project for Spring Boot</description>
 	<properties>
 		<java.version>1.8</java.version>
